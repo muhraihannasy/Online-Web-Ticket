@@ -13,6 +13,7 @@ use App\Repositories\BookingRepository;
 use App\Repositories\CategoryRepository;
 
 use App\Services\FrontService;
+use App\Services\BookingService;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(TicketRepositoryInterface::class, TicketRepository::class);
         $this->app->singleton(BookingRepositoryInterface::class, BookingRepository::class);
         $this->app->singleton(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $this->app->singleton(BookingService::class);
         $this->app->singleton(FrontService::class);
     }
 

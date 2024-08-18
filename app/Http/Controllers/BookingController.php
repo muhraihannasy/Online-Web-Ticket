@@ -2,49 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ticket;
+
 use Illuminate\Http\Request;
+
+use App\Services\BookingService;
+use App\Http\Requests\StoreBookingRequest;
 
 class BookingController extends Controller
 {
 
-    public function checkBooking()
+    protected $bookingService;
+
+    public function __construct(BookingService $bookingService)
     {
-        return view('front.checkBooking');
+        $this->bookingService = $bookingService;
     }
 
 
-    public function checkBookingDetails()
+    public function booking(Ticket $ticket)
     {
-        return view('front.checkBookingDetails');
+        dd($ticket);
+
+        // return view('front.checkBooking');
     }
 
-
-    public function payment()
+    public function bookingStore(Ticket $ticket, StoreBookingRequest $request)
     {
-        return view('front.payment');
+        $validated = $request->validate();
+
+        $totals = $this->bookingService->calculateTotals($ticket->id, $validated['total_participant']);
+        $this->bookingService->storeBookingInSession($ticket, $validated, $totals);
+
+        return redirect()->route('front.payment');
     }
 
-
-    public function paymentStore()
-    {
-        return view('front.paymentStore');
-    }
-
-
-    public function booking($ticket)
-    {
-        return view('front.booking');
-    }
+    // public function payment()
+    // {
+    //     return view('front.payment');
+    // }
 
 
-    public function bookingStore($ticket)
-    {
-        return view('front.bookingStore');
-    }
+    // public function paymentStore()
+    // {
+    //     return view('front.paymentStore');
+    // }
 
 
-    public function bookingFinished($bookingTransaction)
-    {
-        return view('front.bookingFinished');
-    }
+    // public function booking($ticket)
+    // {
+    //     return view('front.booking');
+    // }
+
+
+    // public function bookingStore($ticket)
+    // {
+    //     return view('front.bookingStore');
+    // }
+
+
+    // public function bookingFinished($bookingTransaction)
+    // {
+    //     return view('front.bookingFinished');
+    // }
 }
