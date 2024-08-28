@@ -53,7 +53,7 @@ class BookingService
     public function payment()
     {
         $booking = session('booking');
-        $ticket = $this->ticketRepository->find($booking['ticket_id']);
+        $ticket = $this->ticketRepository->findTicket($booking['ticket_id']);
 
         return compact('booking', 'ticket');
     }
@@ -70,6 +70,7 @@ class BookingService
             }
 
             $validate['name'] = $booking['name'];
+            $validate['ticket_id'] = $booking['ticket_id'];
             $validate['email'] = $booking['email'];
             $validate['phone_number'] = $booking['phone_number'];
             $validate['started_at'] = $booking['started_at'];
@@ -77,6 +78,7 @@ class BookingService
             $validate['subtotal'] = $booking['subtotal'];
             $validate['total_ppn'] = $booking['total_ppn'];
             $validate['total_amount'] = $booking['total_amount'];
+            $validate['is_paid'] = false;
             $validate['booking_trx_id'] = BookingTransaction::generateUniqueTrxId();
 
             $newBooking = $this->bookingRepository->createBooking($validate);

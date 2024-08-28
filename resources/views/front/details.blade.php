@@ -13,7 +13,7 @@
     <div class="relative flex flex-col w-full min-h-screen max-w-[640px] mx-auto bg-white">
         <header class="relative h-[480px] mb-[44px]">
             <div id="Absolute-Top-Nav" class="absolute flex items-center justify-between w-full px-4 mt-[60px] z-10">
-                <a href="index.html">
+                <a href="{{route('front.index')}}">
                     <img src="{{asset('assets/images/icons/back.svg')}}" class="w-12 h-12" alt="icon">
                 </a>
                 <a href="#">
@@ -52,7 +52,7 @@
                             <div id="playBtn" class="absolute w-full h-full z-10 bg-transparent"></div>
                             <div class="plyr__video-embed" id="player" style="width: 100%; height: 100%;">
                                 <iframe
-                                    src="https://www.youtube.com/embed/bTqVqk7FSmY?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
+                                    src="https://www.youtube.com/embed/{{$ticket->path_video}}?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
                                     allowfullscreen
                                     allowtransparency
                                     allow="autoplay"
@@ -64,6 +64,7 @@
                 <div class="swiper-pagination !relative !bottom-auto flex items-center justify-center gap-[6px] py-5"></div>
             </div>
         </header>
+
         <main id="details" class="flex flex-col gap-5 px-4 pb-[116px]">
             <section id="Get-to-Know" class="flex flex-col gap-[6px]">
                 <h2 class="font-bold text-sm leading--[21px]">Get to Know</h2>
@@ -113,7 +114,7 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section>iuMQMYgPMhhh7TZn
 
             <section id="Management" class="flex flex-col gap-[6px]">
                 <h2 class="font-bold text-sm leading--[21px]">Management</h2>
@@ -136,7 +137,7 @@
                 <h2 class="font-bold text-sm leading--[21px]">Map & Address</h2>
                 <div class="w-full h-[200px] overflow-hidden">
                     <div id="embedded-map-display" class="w-full h-full">
-                        <iframe class="w-full h-full" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=singapore&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"></iframe>
+                        <iframe class="w-full h-full" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q={{$ticket->address}}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"></iframe>
                     </div>
                 </div>
                 <p class="text-sm leading-[28px]">{{$ticket->address}}</p>
@@ -147,7 +148,8 @@
                 <p class="font-bold text-[22px] leading-[26px]">Rp {{number_format($ticket->price, 0, '.', '.')}}</p>
                 <p class="text-sm leading-[26px] text-[#70758F]">1/person</p>
             </div>
-            <a href="booking.html">
+
+            <a href="{{route('front.booking', $ticket->slug)}}">
                 <div class="flex items-center p-1 pl-5 w-fit gap-4 rounded-full bg-[#13181D]">
                     <p class="font-bold text-white">Book Now</p>
                     <img src="{{asset('assets/images/icons/coupon.svg')}}" class="w-[50px] h-[50px]" alt="icon">

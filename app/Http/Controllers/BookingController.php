@@ -24,30 +24,31 @@ class BookingController extends Controller
 
     public function booking(Ticket $ticket)
     {
-        dd($ticket);
-
-        // return view('front.checkBooking');
+        return view('front.booking', compact('ticket'));
     }
 
     public function bookingStore(Ticket $ticket, StoreBookingRequest $request)
     {
-        $validated = $request->validate();
 
-        $totals = $this->bookingService->calculateTotals($ticket->id, $validated['total_participant']);
-        $this->bookingService->storeBookingInSession($ticket, $validated, $totals);
+        $totals = $this->bookingService->calculateTotals($ticket->id, $request['total_participant']);
+        $this->bookingService->storeBookingInSession($ticket, $request, $totals);
+        dd($booking);
+
+        $booking = session('booking');
 
         return redirect()->route('front.payment');
     }
 
      public function payment()
     {
-        $data = $this->bookingRepository->payment();
+        $data = $this->bookingService->payment();
         return view('front.payment', $data);
     }
 
     public function paymentStore(PaymentStoreRequest $request)
     {
-        $validated = $request->validated();
+        $validated['proof'] = $request->file('proof');
+
         $bookingTransactionId = $this->bookingService->paymentStore($validated);
 
         if ($bookingTransactionId) {
@@ -59,6 +60,6 @@ class BookingController extends Controller
 
     public function bookingFinished(BookingTransaction $bookingTransaction)
     {
-        return view('front.bookingFinished', compact('bookingTransactionoo'));
+        return view('front.booking-finished', compact('bookingTransaction'));
     }
 }

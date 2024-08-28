@@ -27,8 +27,7 @@ class FrontController extends Controller
 
     public function category(Category $category)
     {
-        // return compact('category');
-        // return view('front.category');
+        return view('front.category', compact('category'));
     }
 
     public function details(Ticket $ticket)
