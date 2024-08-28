@@ -15,4 +15,6 @@ class BookingRepository implements BookingRepositoryInterface
     {
         return BookingTransaction::where('booking_trx_id', $trxId, 'phone_number', $phone)->first();
     }
+
+
 }

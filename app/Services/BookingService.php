@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
-use App\Repositories\BookingRepository;
+use App\Models\BookingTransaction;
+use Illuminate\Support\Facades\DB;
 use App\Repositories\TicketRepository;
+use App\Repositories\BookingRepository;
 
-class FrontService
+class BookingService
 {
     protected $bookingRepository;
     protected $ticketRepository;
@@ -17,7 +19,6 @@ class FrontService
         $this->ticketRepository = $ticketRepository;
         $this->bookingRepository = $bookingRepository;
     }
-
 
     public function calculateTotals($ticketId, $totalParticipants)
     {
@@ -48,4 +49,42 @@ class FrontService
             'total_amount' => $totals['total_amount'],
         ]);
     }
+
+    public function payment()
+    {
+        $booking = session('booking');
+        $ticket = $this->ticketRepository->find($booking['ticket_id']);
+
+        return compact('booking', 'ticket');
+    }
+
+    public function paymentStore(array $validate)
+    {
+        $booking = session('booking');
+        $bookingTransactionId = null;
+
+        DB::transaction(function() use ($validate, &$bookingTransactionId, $booking) {
+            if (isset($validate['proof'])) {
+                $proofPath = $validate['proof']->store('proofs', 'public');
+                $validate['proof'] = $proofPath;
+            }
+
+            $validate['name'] = $booking['name'];
+            $validate['email'] = $booking['email'];
+            $validate['phone_number'] = $booking['phone_number'];
+            $validate['started_at'] = $booking['started_at'];
+            $validate['total_participant'] = $booking['total_participant'];
+            $validate['subtotal'] = $booking['subtotal'];
+            $validate['total_ppn'] = $booking['total_ppn'];
+            $validate['total_amount'] = $booking['total_amount'];
+            $validate['booking_trx_id'] = BookingTransaction::generateUniqueTrxId();
+
+            $newBooking = $this->bookingRepository->createBooking($validate);
+            $bookingTransactionId = $newBooking->id;
+        });
+
+        return $bookingTransactionId;
+    }
+
+
 }

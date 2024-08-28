@@ -7,6 +7,8 @@ use App\Models\Ticket;
 use Illuminate\Http\Request;
 
 use App\Services\BookingService;
+use App\Models\BookingTransaction;
+use App\Http\Requests\PaymentStoreRequest;
 use App\Http\Requests\StoreBookingRequest;
 
 class BookingController extends Controller
@@ -37,32 +39,26 @@ class BookingController extends Controller
         return redirect()->route('front.payment');
     }
 
-    // public function payment()
-    // {
-    //     return view('front.payment');
-    // }
+     public function payment()
+    {
+        $data = $this->bookingRepository->payment();
+        return view('front.payment', $data);
+    }
 
+    public function paymentStore(PaymentStoreRequest $request)
+    {
+        $validated = $request->validated();
+        $bookingTransactionId = $this->bookingService->paymentStore($validated);
 
-    // public function paymentStore()
-    // {
-    //     return view('front.paymentStore');
-    // }
+        if ($bookingTransactionId) {
+            return redirect()->route('front.booking_finished', $bookingTransactionId);
+        }
 
+        return redirect()-route('front.index')->withErrors(['error' => 'Payment Failed, please try again.']);
+    }
 
-    // public function booking($ticket)
-    // {
-    //     return view('front.booking');
-    // }
-
-
-    // public function bookingStore($ticket)
-    // {
-    //     return view('front.bookingStore');
-    // }
-
-
-    // public function bookingFinished($bookingTransaction)
-    // {
-    //     return view('front.bookingFinished');
-    // }
+    public function bookingFinished(BookingTransaction $bookingTransaction)
+    {
+        return view('front.bookingFinished', compact('bookingTransactionoo'));
+    }
 }

@@ -21,20 +21,19 @@ class FrontController extends Controller
 
     public function index()
     {
-        dd($this->frontService->frontPage());
-        // return view('front.index', $this->frontService->frontPage);
+        // dd($this->frontService->frontPage());
+        return view('front.index', $this->frontService->frontPage());
     }
 
     public function category(Category $category)
     {
-        return compact('category');
+        // return compact('category');
         // return view('front.category');
     }
 
     public function details(Ticket $ticket)
     {
-        return compact('ticket');
-        // return view('front.category');
+        return view('front.details', compact('ticket'));
     }
 
 }

@@ -4,27 +4,32 @@ namespace App\Services;
 
 use App\Repositories\TicketRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\SellerRepository;
 
 class FrontService
 {
     protected $ticketRepository;
     protected $categoryRepository;
+    protected $sellerRepository;
 
     public function __construct(
         CategoryRepository $categoryRepository,
-        TicketRepository $ticketRepository
+        TicketRepository $ticketRepository,
+        SellerRepository $sellerRepository
+
     ) {
         $this->ticketRepository = $ticketRepository;
+        $this->sellerRepository = $sellerRepository;
         $this->categoryRepository = $categoryRepository;
     }
-
 
     public function frontPage()
     {
         $categories = $this->categoryRepository->getAllCategories();
-        $popularTicket = $this->ticketRepository->getPopularTicket();
+        $sellers = $this->sellerRepository->getAllSellers();
+        $popularTickets = $this->ticketRepository->getPopularTicket();
         $newTickets = $this->ticketRepository->getAllNewTicket();
 
-        return compact('categories', 'popularTicket', 'newTickets');
+        return compact('categories', 'sellers', 'popularTickets', 'newTickets');
     }
 }
